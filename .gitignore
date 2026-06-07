@@ -7,3 +7,9 @@ coverage/
 *.log
 .idea/
 .vscode/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
