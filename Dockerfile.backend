@@ -1,0 +1,17 @@
+FROM golang:1.25-alpine AS builder
+WORKDIR /app
+COPY backend/go.mod ./
+RUN go mod download
+COPY backend/ .
+RUN CGO_ENABLED=0 GOOS=linux go build -o hotel-api .
+
+FROM alpine:3.21
+RUN addgroup -S app && adduser -S app -G app
+WORKDIR /app
+COPY --from=builder /app/hotel-api .
+COPY data/ ./data/
+USER app
+ENV PORT=8080
+ENV DATA_PATH=/app/data/hotels.json
+EXPOSE 8080
+CMD ["./hotel-api"]

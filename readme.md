@@ -182,6 +182,88 @@ frontend/src/
 
 ---
 
+## AWS Deployment
+
+The app deploys to AWS using Terraform and Docker. The architecture uses **AWS App Runner** (no ALB, ~$3–6/month idle) behind a **CloudFront** distribution for HTTPS and path-based routing.
+
+```text
+Users → CloudFront (*.cloudfront.net, free HTTPS)
+           ├── /api/* → App Runner: Go backend
+           └── /*     → App Runner: Next.js frontend
+```
+
+### Prerequisites (install once)
+
+```bash
+brew install awscli terraform
+# Then configure your AWS credentials:
+aws configure
+# Enter: Access Key ID, Secret Access Key, region (us-east-1), output format (json)
+```
+
+You'll also need Docker Desktop running.
+
+To create an AWS Access Key: AWS Console → IAM → Users → your user → Security credentials → Create access key.
+
+### First deploy
+
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+The script will:
+
+1. Create ECR container registries + IAM role
+2. Build and push the Go backend image
+3. Build and push the Next.js frontend image (with `NEXT_PUBLIC_API_URL=""` baked in for same-origin CloudFront routing)
+4. Create both App Runner services and the CloudFront distribution
+
+**Total time: ~10 minutes** (most of it is CloudFront propagation).
+
+The URL is printed at the end. If it's not reachable immediately, wait 2–3 minutes for propagation to complete.
+
+### Subsequent deploys
+
+```bash
+./deploy.sh
+```
+
+Same command — Terraform is idempotent. It detects the new image tags and triggers an App Runner redeployment.
+
+### Tear down
+
+```bash
+terraform -chdir=infra destroy
+```
+
+Removes all AWS resources. ECR images must be deleted manually first (AWS Console → ECR → delete images), or add `force_delete = true` to the ECR resources in `infra/ecr.tf`.
+
+### Cost estimate
+
+| Resource | Idle/month | With traffic |
+| --- | --- | --- |
+| App Runner backend (0.25 vCPU / 0.5 GB) | ~$1 | ~$5–10 |
+| App Runner frontend (0.5 vCPU / 1 GB) | ~$2 | ~$7–12 |
+| CloudFront | ~$0.50 | ~$1–2 |
+| ECR (free tier: 500 MB) | $0 | $0 |
+| **Total** | **~$3–4/month** | **~$13–24/month** |
+
+### Infrastructure files
+
+```text
+infra/
+├── main.tf          ← provider config
+├── variables.tf     ← aws_region, app_name, backend_image_tag, frontend_image_tag
+├── outputs.tf       ← cloudfront_url, ecr repo URLs, app runner URLs
+├── ecr.tf           ← ECR repositories + lifecycle policies (keep last 3 images)
+├── iam.tf           ← IAM role for App Runner to pull from ECR
+├── app_runner.tf    ← App Runner services for backend and frontend
+└── cloudfront.tf    ← CloudFront distribution with /api/* → backend path routing
+```
+
+---
+
 ## AI Tooling
 
 This project was built end-to-end with **Claude Code** (`claude-sonnet-4-6`) via the Anthropic Claude Code CLI.

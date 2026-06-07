@@ -20,10 +20,11 @@ func NewHotels(s *store.Store) *Hotels {
 }
 
 // Register mounts all hotel routes onto mux.
+// Routes are prefixed with /api so CloudFront can distinguish backend traffic from frontend.
 func (h *Hotels) Register(mux *http.ServeMux) {
-	mux.HandleFunc("GET /hotels", h.searchHotels)
-	mux.HandleFunc("GET /hotels/{id}", h.getHotel)
-	mux.HandleFunc("GET /hotels/{id}/rooms", h.getRooms)
+	mux.HandleFunc("GET /api/hotels", h.searchHotels)
+	mux.HandleFunc("GET /api/hotels/{id}", h.getHotel)
+	mux.HandleFunc("GET /api/hotels/{id}/rooms", h.getRooms)
 }
 
 // searchHotels handles GET /hotels

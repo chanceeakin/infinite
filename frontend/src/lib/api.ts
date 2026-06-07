@@ -1,7 +1,8 @@
 import type { Hotel, Room } from "@/types/hotel";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+// In production (Docker/CloudFront), NEXT_PUBLIC_API_URL is "" — calls become same-origin /api/* routed by CloudFront.
+// In local dev, set NEXT_PUBLIC_API_URL=http://localhost:8080 in .env.local.
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export interface HotelsResponse {
   hotels: Hotel[];
@@ -17,14 +18,14 @@ export interface RoomsResponse {
 }
 
 export async function fetchHotels(): Promise<Hotel[]> {
-  const res = await fetch(`${API_URL}/hotels`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/api/hotels`, { cache: "no-store" });
   if (!res.ok) throw new Error(`fetchHotels failed: ${res.status}`);
   const body: HotelsResponse = await res.json();
   return body.hotels;
 }
 
 export async function fetchHotel(id: string): Promise<Hotel | null> {
-  const res = await fetch(`${API_URL}/hotels/${id}`, { cache: "no-store" });
+  const res = await fetch(`${API_URL}/api/hotels/${id}`, { cache: "no-store" });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`fetchHotel failed: ${res.status}`);
   return res.json();
@@ -36,7 +37,7 @@ export async function fetchAvailableRooms(
   checkOut: string
 ): Promise<Room[]> {
   const params = new URLSearchParams({ check_in: checkIn, check_out: checkOut });
-  const res = await fetch(`${API_URL}/hotels/${hotelId}/rooms?${params}`, {
+  const res = await fetch(`${API_URL}/api/hotels/${hotelId}/rooms?${params}`, {
     cache: "no-store",
   });
   if (!res.ok) throw new Error(`fetchAvailableRooms failed: ${res.status}`);
