@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* 70s Retro Palette — Light (Day) */
+:root {
+  --retro-bg: #F4E4B4;
+  --retro-surface: #FDF6DF;
+  --retro-surface-alt: #EAD89C;
+  --retro-primary: #B84E10;
+  --retro-primary-hover: #943A08;
+  --retro-accent: #BE8C00;
+  --retro-secondary: #587020;
+  --retro-text: #200E04;
+  --retro-text-muted: #664420;
+  --retro-text-faint: #987848;
+  --retro-border: #BCAA6C;
+  --retro-border-subtle: #DDD09C;
+  --retro-star: #BE8C00;
+  --retro-error: #A82C18;
+  --retro-badge-warm-bg: #F0D8A4;
+  --retro-badge-warm-text: #7A3808;
+  --retro-badge-green-bg: #D4E0A0;
+  --retro-badge-green-text: #3C5C10;
+}
+
+/* 70s Retro Palette — Dark (Night) */
+.dark {
+  --retro-bg: #160902;
+  --retro-surface: #221005;
+  --retro-surface-alt: #2E1808;
+  --retro-primary: #D46018;
+  --retro-primary-hover: #E87030;
+  --retro-accent: #CCA010;
+  --retro-secondary: #7A9C28;
+  --retro-text: #F4E4B4;
+  --retro-text-muted: #BCA060;
+  --retro-text-faint: #7A6040;
+  --retro-border: #4A2C0C;
+  --retro-border-subtle: #281608;
+  --retro-star: #CCA010;
+  --retro-error: #CC4028;
+  --retro-badge-warm-bg: #3A2008;
+  --retro-badge-warm-text: #E07A38;
+  --retro-badge-green-bg: #1C3008;
+  --retro-badge-green-text: #88C030;
+}
+
+@theme inline {
+  --font-sans: var(--font-dm-sans);
+  --font-serif: var(--font-playfair);
+  --font-mono: var(--font-geist-mono);
+
+  --color-retro-bg: var(--retro-bg);
+  --color-retro-surface: var(--retro-surface);
+  --color-retro-surface-alt: var(--retro-surface-alt);
+  --color-retro-primary: var(--retro-primary);
+  --color-retro-primary-hover: var(--retro-primary-hover);
+  --color-retro-accent: var(--retro-accent);
+  --color-retro-secondary: var(--retro-secondary);
+  --color-retro-text: var(--retro-text);
+  --color-retro-text-muted: var(--retro-text-muted);
+  --color-retro-text-faint: var(--retro-text-faint);
+  --color-retro-border: var(--retro-border);
+  --color-retro-border-subtle: var(--retro-border-subtle);
+  --color-retro-star: var(--retro-star);
+  --color-retro-error: var(--retro-error);
+  --color-retro-badge-warm-bg: var(--retro-badge-warm-bg);
+  --color-retro-badge-warm-text: var(--retro-badge-warm-text);
+  --color-retro-badge-green-bg: var(--retro-badge-green-bg);
+  --color-retro-badge-green-text: var(--retro-badge-green-text);
+}
+
+@layer base {
+  body {
+    background-color: var(--retro-bg);
+    color: var(--retro-text);
+    font-family: var(--font-dm-sans), 'DM Sans', Arial, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  }
+}
