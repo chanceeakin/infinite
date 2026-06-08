@@ -47,8 +47,9 @@ resource "aws_apprunner_service" "frontend" {
       image_configuration {
         port = "3000"
         runtime_environment_variables = {
-          PORT     = "3000"
-          NODE_ENV = "production"
+          PORT        = "3000"
+          NODE_ENV    = "production"
+          BACKEND_URL = "https://${aws_apprunner_service.backend.service_url}"
         }
       }
     }

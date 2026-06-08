@@ -1,8 +1,12 @@
 import type { Hotel, Room } from "@/types/hotel";
 
-// In production (Docker/CloudFront), NEXT_PUBLIC_API_URL is "" — calls become same-origin /api/* routed by CloudFront.
-// In local dev, set NEXT_PUBLIC_API_URL=http://localhost:8080 in .env.local.
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+// Client-side: NEXT_PUBLIC_API_URL="" so CloudFront routes /api/* to the backend App Runner service.
+// Server-side (SSR): relative URLs don't work — use BACKEND_URL (runtime env var injected by App Runner).
+// Local dev: set NEXT_PUBLIC_API_URL=http://localhost:8080 in .env.local.
+const API_URL =
+  typeof window === "undefined"
+    ? (process.env.BACKEND_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "")
+    : (process.env.NEXT_PUBLIC_API_URL ?? "");
 
 export interface HotelsResponse {
   hotels: Hotel[];
