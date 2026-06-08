@@ -1,4 +1,4 @@
-# Hotel Discovery — Full-Stack Take-Home
+# Hotel Discovery — Full-Stack App
 
 A production-ready hotel discovery platform built as a full-stack app. The Go backend serves hotel data via a RESTful API; the Next.js frontend consumes it to deliver a search/filter dashboard, hotel detail views, and a live room availability checker.
 
