@@ -49,6 +49,7 @@ resource "aws_apprunner_service" "frontend" {
         runtime_environment_variables = {
           PORT        = "3000"
           NODE_ENV    = "production"
+          HOSTNAME    = "0.0.0.0"
           BACKEND_URL = "https://${aws_apprunner_service.backend.service_url}"
         }
       }
